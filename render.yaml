@@ -1,0 +1,73 @@
+services:
+  - type: web
+    name: n8n-app
+    env: docker
+    plan: free
+    image: docker.n8n.io/n8nio/n8n
+    envVars:
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: "true"
+      - key: N8N_BASIC_AUTH_USER
+        value: "admin"
+      - key: N8N_BASIC_AUTH_PASSWORD
+        value: "admin@123"
+      - key: DB_TYPE
+        value: "postgresdb"
+      - key: DB_POSTGRESDB_HOST
+        fromDatabase:
+          name: postgres_db
+          property: host
+      - key: DB_POSTGRESDB_PORT
+        fromDatabase:
+          name: postgres_db
+          property: port
+      - key: DB_POSTGRESDB_DATABASE
+        fromDatabase:
+          name: postgres_db
+          property: database
+      - key: DB_POSTGRESDB_USER
+        fromDatabase:
+          name: postgres_db
+          property: user
+      - key: DB_POSTGRESDB_PASSWORD
+        fromDatabase:
+          name: postgres_db
+          property: password
+
+  - type: web
+    name: whatsapp-evolution
+    env: docker
+    plan: free
+    image: evoapicloud/evolution-api:v2.1.1
+    envVars:
+      - key: AUTHENTICATION_TYPE
+        value: "apikey"
+      - key: AUTHENTICATION_API_KEY
+        value: "admin@123"
+      - key: DATABASE_PROVIDER
+        value: "postgresql"
+      - key: DATABASE_CONNECTION_URI
+        fromDatabase:
+          name: postgres_db
+          property: connectionString
+      - key: CACHE_REDIS_ENABLED
+        value: "true"
+      - key: CACHE_REDIS_HOST
+        fromService:
+          type: redis
+          name: redis-cache
+          property: host
+      - key: CACHE_REDIS_PORT
+        fromService:
+          type: redis
+          name: redis-cache
+          property: port
+
+databases:
+  - name: postgres_db
+    plan: free
+    databaseName: n8n_db
+    user: admin
+
+  - name: redis-cache
+    plan: free
