@@ -54,20 +54,21 @@ services:
         value: "true"
       - key: CACHE_REDIS_HOST
         fromService:
-          type: redis
+          type: keyvalue
           name: redis-cache
           property: host
       - key: CACHE_REDIS_PORT
         fromService:
-          type: redis
+          type: keyvalue
           name: redis-cache
           property: port
+
+  - type: keyvalue
+    name: redis-cache
+    plan: free
 
 databases:
   - name: postgres_db
     plan: free
     databaseName: n8n_db
     user: admin
-
-  - name: redis-cache
-    plan: free
