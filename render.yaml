@@ -1,4 +1,45 @@
-- type: web
+services:
+  - type: web
+    name: n8n-app
+    runtime: image
+    image:
+      url: n8nio/n8n:latest
+    plan: free
+    envVars:
+      - key: PORT
+        value: "5678"
+      - key: DB_TYPE
+        value: postgresdb
+      - key: DB_POSTGRESDB_HOST
+        fromDatabase:
+          name: postgres_db
+          property: host
+      - key: DB_POSTGRESDB_PORT
+        fromDatabase:
+          name: postgres_db
+          property: port
+      - key: DB_POSTGRESDB_DATABASE
+        fromDatabase:
+          name: postgres_db
+          property: database
+      - key: DB_POSTGRESDB_USER
+        fromDatabase:
+          name: postgres_db
+          property: user
+      - key: DB_POSTGRESDB_PASSWORD
+        fromDatabase:
+          name: postgres_db
+          property: password
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true
+      - key: GENERIC_TIMEZONE
+        value: Asia/Kolkata
+      - key: TZ
+        value: Asia/Kolkata
+      - key: WEBHOOK_URL
+        sync: false
+
+  - type: web
     name: whatsapp-evolution
     runtime: image
     image:
@@ -48,3 +89,15 @@
         value: Evolution API
       - key: CONFIG_SESSION_PHONE_NAME
         value: Chrome
+
+  - type: keyvalue
+    name: redis-cache
+    plan: free
+    ipAllowList: []
+
+databases:
+  - name: postgres_db
+    plan: free
+    databaseName: n8n_db
+    user: admin
+    ipAllowList: []
