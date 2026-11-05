@@ -1,9 +1,9 @@
 services:
   - type: web
     name: n8n-app
-    env: docker
-    plan: free
+    runtime: image
     image: docker.n8n.io/n8nio/n8n
+    plan: free
     envVars:
       - key: N8N_BASIC_AUTH_ACTIVE
         value: "true"
@@ -36,9 +36,9 @@ services:
 
   - type: web
     name: whatsapp-evolution
-    env: docker
-    plan: free
+    runtime: image
     image: evoapicloud/evolution-api:v2.1.1
+    plan: free
     envVars:
       - key: AUTHENTICATION_TYPE
         value: "apikey"
