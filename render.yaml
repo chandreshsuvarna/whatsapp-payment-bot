@@ -8,11 +8,11 @@
       - key: PORT
         value: "8080"
       - key: SERVER_URL
-        value: https://whatsapp-evolution-pt2p.onrender.com  # <--- UPDATE THIS
+        value: https://whatsapp-evolution-pt2p.onrender.com
       - key: AUTHENTICATION_TYPE
         value: apikey
       - key: AUTHENTICATION_API_KEY
-        value: "admin@123"                                 # <--- UPDATE THIS (replaces generateValue: true)
+        value: "admin@123"
       - key: DATABASE_ENABLED
         value: "true"
       - key: DATABASE_PROVIDER
