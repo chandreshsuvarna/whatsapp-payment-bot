@@ -2,17 +2,14 @@ services:
   - type: web
     name: n8n-app
     runtime: image
-    image: docker.n8n.io/n8nio/n8n
+    image:
+      url: docker.n8n.io/n8nio/n8n
     plan: free
     envVars:
-      - key: N8N_BASIC_AUTH_ACTIVE
-        value: "true"
-      - key: N8N_BASIC_AUTH_USER
-        value: "admin"
-      - key: N8N_BASIC_AUTH_PASSWORD
-        value: "admin@123"
+      - key: PORT
+        value: "5678"
       - key: DB_TYPE
-        value: "postgresdb"
+        value: postgresdb
       - key: DB_POSTGRESDB_HOST
         fromDatabase:
           name: postgres_db
@@ -33,42 +30,74 @@ services:
         fromDatabase:
           name: postgres_db
           property: password
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true
+      - key: GENERIC_TIMEZONE
+        value: Asia/Kolkata
+      - key: TZ
+        value: Asia/Kolkata
+      - key: WEBHOOK_URL
+        sync: false
 
   - type: web
     name: whatsapp-evolution
     runtime: image
-    image: evoapicloud/evolution-api:v2.1.1
+    image:
+      url: evoapicloud/evolution-api:latest
     plan: free
     envVars:
+      - key: PORT
+        value: "8080"
+      - key: SERVER_URL
+        sync: false
       - key: AUTHENTICATION_TYPE
-        value: "apikey"
+        value: apikey
       - key: AUTHENTICATION_API_KEY
-        value: "admin@123"
+        generateValue: true
+      - key: DATABASE_ENABLED
+        value: "true"
       - key: DATABASE_PROVIDER
-        value: "postgresql"
+        value: postgresql
       - key: DATABASE_CONNECTION_URI
         fromDatabase:
           name: postgres_db
           property: connectionString
+      - key: DATABASE_SAVE_DATA_INSTANCE
+        value: "true"
+      - key: DATABASE_SAVE_DATA_NEW_MESSAGE
+        value: "true"
+      - key: DATABASE_SAVE_MESSAGE_UPDATE
+        value: "true"
+      - key: DATABASE_SAVE_DATA_CONTACTS
+        value: "true"
+      - key: DATABASE_SAVE_DATA_CHATS
+        value: "true"
       - key: CACHE_REDIS_ENABLED
         value: "true"
-      - key: CACHE_REDIS_HOST
+      - key: CACHE_REDIS_URI
         fromService:
           type: keyvalue
           name: redis-cache
-          property: host
-      - key: CACHE_REDIS_PORT
-        fromService:
-          type: keyvalue
-          name: redis-cache
-          property: port
+          property: connectionString
+      - key: CACHE_REDIS_PREFIX_KEY
+        value: evolution
+      - key: CACHE_REDIS_SAVE_INSTANCES
+        value: "false"
+      - key: CACHE_LOCAL_ENABLED
+        value: "false"
+      - key: CONFIG_SESSION_PHONE_CLIENT
+        value: Evolution API
+      - key: CONFIG_SESSION_PHONE_NAME
+        value: Chrome
 
   - type: keyvalue
     name: redis-cache
     plan: free
+    ipAllowList: []
 
 databases:
   - name: postgres_db
     plan: free
     databaseName: n8n_db
     user: admin
+    ipAllowList: []
