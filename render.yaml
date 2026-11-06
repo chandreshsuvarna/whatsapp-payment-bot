@@ -53,7 +53,7 @@ services:
       - key: AUTHENTICATION_TYPE
         value: apikey
       - key: AUTHENTICATION_API_KEY
-        value: "admin@123"
+        value: "Kelkar@9930@#$"
       - key: DATABASE_ENABLED
         value: "true"
       - key: DATABASE_PROVIDER
